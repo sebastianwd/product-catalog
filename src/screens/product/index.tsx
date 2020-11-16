@@ -1,6 +1,7 @@
 import { Typography, Icon } from '@components'
 import { Product } from '@generated/graphql'
 import { getWhatsappUrl } from '@utils'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import React from 'react'
 import Button from 'src/components/button'
@@ -17,7 +18,11 @@ const ProductScreen: React.FC<Props> = (props) => {
   const productName = product.name!.toLowerCase()
 
   return (
-    <Container>
+    <Container
+      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       <Content>
         <ImageSection>
           <ImageContainer>
@@ -67,6 +72,7 @@ const ImageSection = styled.div`
 
   ${down('sm')} {
     width: 100%;
+    height: ${(props) => props.theme.spacing(48)};
     padding-right: 0;
   }
 `
@@ -86,11 +92,11 @@ const Info = styled.div`
   flex-direction: column;
 
   ${ProductName} {
-    margin-top: ${(props) => props.theme.spacing(1)};
+    margin-top: ${(props) => props.theme.spacing(2)};
   }
 
   ${Description} {
-    margin-bottom: ${(props) => props.theme.spacing(2)};
+    margin-bottom: ${(props) => props.theme.spacing(3)};
   }
 `
 
@@ -99,7 +105,7 @@ const ImageContainer = styled.div`
   flex-direction: center;
   justify-content: center;
   height: 100%;
-  background-color: white;
+  background-color: ${(props) => props.theme.colors.background.main};
 
   > div {
     width: 100%;
@@ -118,7 +124,7 @@ const Content = styled.div`
   }
 `
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   min-height: 60vh;
 `
 

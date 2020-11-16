@@ -1,8 +1,9 @@
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import Image from 'next/image'
+import { NavLink } from '@components'
+import Link from 'next/link'
 import Nav from '../nav'
 import Typography from '../typography'
-import Link from 'next/link'
 
 interface Props {
   logo?: string
@@ -28,11 +29,30 @@ const Header: React.FC<Props> = (props) => {
         </Link>
       </ImageContainer>
       <StyledNav>
-        <Typography variant="caption">Catálogo</Typography>
+        <NavLink href="/" passHref>
+          <NavLinkText variant="caption" color="secondary" tag="a">
+            Catálogo
+          </NavLinkText>
+        </NavLink>
       </StyledNav>
     </StyledHeader>
   )
 }
+
+const NavLinkText = styled(Typography)<{ isActive?: boolean }>`
+  margin-left: auto;
+  transition: all 0.2s ease-in;
+
+  &:hover {
+    color: ${(props) => props.theme.colors.text.main};
+  }
+
+  ${(props) =>
+    props.isActive &&
+    css`
+      color: ${props.theme.colors.text.main};
+    `}
+`
 
 const StyledNav = styled(Nav)`
   margin-left: auto;

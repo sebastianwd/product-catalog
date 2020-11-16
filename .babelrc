@@ -2,6 +2,6 @@
   "presets": ["next/babel"],
   "plugins": [
     ["graphql-tag"],
-    ["styled-components", { "ssr": true }],
+    ["styled-components", { "ssr": true }]
   ]
 }

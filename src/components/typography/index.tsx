@@ -11,6 +11,7 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   align?: 'left' | 'center' | 'right' | 'justify'
   wrap?: boolean
   htmlFor?: string
+  externalLink?: boolean
 }
 
 const StyledElement = styled.div<{ baseStyle: CSSObject }>`
@@ -26,6 +27,7 @@ const Typography = (props: TypographyProps) => {
     variant = 'body1',
     align,
     gutterBottom,
+    externalLink,
     ...other
   } = props
 
@@ -43,7 +45,7 @@ const Typography = (props: TypographyProps) => {
     }),
   }
 
-  const isLink = tag === 'a'
+  const isLink = tag === 'a' && externalLink
 
   const linkProps = {
     target: '_blank',

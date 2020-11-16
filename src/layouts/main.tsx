@@ -20,10 +20,11 @@ const MainWrapper = styled.main`
 
   ${down('sm')} {
     padding: 0 ${(props) => props.theme.spacing(2)};
+    padding-top: ${(props) => props.theme.spacing(2)};
   }
 
   > *:not(:last-child) {
-    margin-bottom: ${(props) => props.theme.spacing(5)};
+    margin-bottom: ${(props) => props.theme.spacing(3)};
   }
 
   > :last-child {
@@ -33,13 +34,11 @@ const MainWrapper = styled.main`
 
 const MainLayout: React.FC<Props> = ({ children, meta }) => {
   return (
-    <>
-      <MainWrapper>
-        <Header logo={meta?.values?.logo?.url} />
-        {children}
-        <Footer siteName={meta.values?.siteName} />
-      </MainWrapper>
-    </>
+    <MainWrapper>
+      <Header logo={meta?.values?.logo?.url} />
+      {children}
+      <Footer siteName={meta.values?.siteName} />
+    </MainWrapper>
   )
 }
 

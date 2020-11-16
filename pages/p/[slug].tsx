@@ -1,42 +1,52 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
 import { initializeApollo } from '@gql/apollo'
-import { useSSRQuery } from '@hooks'
-import { Product, useProductQuery } from '@generated/graphql'
 import { ProductScreen } from '@screens'
 import { productQuery } from '@gql/queries'
+import { MetaQuery, Product } from '@generated/graphql'
+import { Meta } from '@components'
 
-const productQueryVariables = (slug: string) => ({
-  locales: ['es'],
-  where: { slug: decodeURIComponent(slug) },
-  first: 1,
-})
+interface Props {
+  product: Partial<Product>
+  meta?: MetaQuery
+}
 
-const ProductPage: NextPage = () => {
-  const route = useRouter()
+const ProductPage: NextPage<Props> = (props) => {
+  const { product, meta } = props
 
-  const { data, loading } = useSSRQuery(useProductQuery, {
-    variables: productQueryVariables(route.query.slug as string) as any,
-  })
-
-  if (loading) {
-    return null
-  }
-
-  return <ProductScreen product={data?.page.edges[0].node as Product} />
+  return (
+    <>
+      <Meta product={product} meta={meta} />
+      <ProductScreen product={product} />
+    </>
+  )
 }
 
 ProductPage.getInitialProps = async (ctx) => {
-  const apolloClient = initializeApollo()
+  try {
+    const apolloClient = initializeApollo()
 
-  await apolloClient.query({
-    query: productQuery,
-    variables: productQueryVariables(ctx.query.slug as string),
-  })
+    const { data } = await apolloClient.query({
+      query: productQuery,
+      variables: {
+        locales: ['es'],
+        where: { slug: decodeURIComponent(ctx.query.slug as string) },
+        first: 1,
+      },
+    })
 
-  return {
-    initialApolloState: apolloClient.cache.extract(),
+    const product = data?.page.edges[0]?.node
+
+    if (!product && ctx.res) {
+      ctx.res.statusCode = 404
+    }
+
+    return {
+      product,
+      meta: ctx.meta,
+    }
+  } catch (error) {
+    throw new Error(error)
   }
 }
 
